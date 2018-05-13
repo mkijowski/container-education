@@ -28,3 +28,12 @@ Building from a dockerhub docker container.  Choose one of the following:
 The `singularity shell` and `singularity exec` commands allow us to use the container we have just built.
 * `singularity shell container.simg` launches a shell inside the container
 * `singularity exec container.simg command` executes the command specified inside of the container (will be used in job scheduling scripts)
+
+### But what are the odds someone has done all your work for you? :)
+Chances are another container won't quite work for a similar workflow (without some tweaking)
+
+Enter `--sandbox` containers!  Convert your previous container into a sandbox directory. 
+```singularity build --sandbox anaconda3-dir/ anaconda3.simg```
+Copy files into the container as necessary.
+Launch the container in a writable state:
+```singularity shell --writable anaconda3-dir/```
