@@ -29,10 +29,14 @@ sudo make install
 ```
  
 ## What is a container
-
-
-## Background information for all technologies
-### Linux Containers (LXC)
-[Linux Containers or LXC](https://en.wikipedia.org/wiki/LXC) is an operating system level virtualization method for running multiple isolated Linux systems (containers) on a host using a Single Linux kernel (wikipedia).
+[Linux Containers or LXC](https://en.wikipedia.org/wiki/LXC) is an operating system level virtualization method for running multiple isolated Linux systems (containers) on a host using a Single Linux kernel.
 
 LXC uses a variety of kernel tools such as [chroot][chroot], [cgroups][cgroups], and [namespaces][namespaces] to provide isolation of containers.
+
+[But why though?](https://singularity.lbl.gov/about#use-cases)
+* BYOE: Bring Your Own Environment!
+* Reproducible Science
+* Static Environment
+* Legacy code on old operating systems
+* Complicated software stack
+* Complicated workflows that require custom install/data
