@@ -23,3 +23,8 @@ Building from a dockerhub docker container.  Choose one of the following:
 * [Anaconda3](https://hub.docker.com/r/continuumio/anaconda3/) `singularity build anaconda3.simg docker://continuumio/anaconda3` ~9m
 * [Tensorflow](https://hub.docker.com/r/tensorflow/tensorflow/) `singularity build tensorflow.simg docker://tensorflow/tensorflow` ~5m
 * [Cuda](https://hub.docker.com/r/nvidia/cuda/) `singularity build cuda.simg docker://nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04` ~7m
+
+## Great, now what?
+The `singularity shell` and `singularity exec` commands allow us to use the container we have just built.
+* `singularity shell container.simg` launches a shell inside the container
+* `singularity exec container.simg command` executes the command specified inside of the container (will be used in job scheduling scripts)
