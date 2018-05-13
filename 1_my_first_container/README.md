@@ -33,7 +33,11 @@ The `singularity shell` and `singularity exec` commands allow us to use the cont
 Chances are another container won't quite work for a similar workflow (without some tweaking)
 
 Enter `--sandbox` containers!  Convert your previous container into a sandbox directory. 
-```singularity build --sandbox anaconda3-dir/ anaconda3.simg```
+```
+singularity build --sandbox anaconda3-dir/ anaconda3.simg
+```
 Copy files into the container as necessary.
 Launch the container in a writable state:
-```singularity shell --writable anaconda3-dir/```
+```
+singularity shell --writable anaconda3-dir/
+```
