@@ -27,7 +27,8 @@ make
 sudo make install
 
 ```
- 
+### installing on mac
+http://singularity.lbl.gov/install-mac
 ## What is a container
 [Linux Containers or LXC](https://en.wikipedia.org/wiki/LXC) is an operating system level virtualization method for running multiple isolated Linux systems (containers) on a host using a Single Linux kernel.
 
