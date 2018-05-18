@@ -44,3 +44,60 @@ Jobs consists of two parts: **resource requests** and **job steps**.  A resource
 
 It is usually easiest to submit a job by writing a sumbission script.  Typically these scripts are submitted with the `sbatch` command.  These job submission scripts have a common format that begins with a list of `#SBATCH` options that are interpretted by the slurm scheduler as resource requests and other options, followed by a list of job steps that are executed swith the `srun` command.
 
+Take for instance the below example submission script:
+```
+#!/bin/bash
+#
+#SBATCH --job-name=test
+#SBATCH --output=res.txt
+#
+#SBATCH --ntasks=1
+#SBATCH --time=10:00
+#SBATCH --mem-per-cpu=100
+
+srun hostname
+srun sleep 60
+```
+
+It defines a job name as well as an output file for anything written out during this job (first two `#SBATCH` options), then it requests 1 CPU core along with 100MB of RAM for 10 minutes.  Becasue it is not specified this job will start in the default queue.
+Now that al of the **resource requests** are out of the way we get to the **job steps**.  There are two additional **job steps** defined in the example job submision script above which will be run on the compute node that hold sthe CPU core that gets allocated.  First it will execute `hostname` on that host, the output of which will go to the file `res.txt`, then it will `sleep` for 1 minute.
+
+Note, the `--ntasks` flag above requests CPU cores for tasks, but frequently a task cannot be split across several compute nodes, if you are running a multithreaded program that needs access to more than one core request this with the `--cpus-per-task` option.
+
+## Using Slurm with containers
+It actuallty is quite easy.  Assuming you have a container that is known to work with your code, simply insert `singularity exec /path/to/container` between your `srun` and command.  For example:
+```
+#!/bin/bash
+#
+#SBATCH --job-name=test_cuda
+#SBATCH --output /home/mkijowski/output/%j.%N.out
+#
+#SBATCH --nodes=2
+#SBATCH --ntasks=2
+#SBATCH --time=5:00
+#SBATCH --mem-per-cpu=1000
+
+#SBATCH --gres=gpu:2
+
+srun singularity exec --nv \
+             /home/mkijowski/cuda.img \
+             /home/mkijowski/samples-nvidia/1_Utilities/deviceQuery/deviceQuery
+```
+There is a good bit to note from the above script.  In order:
+- note the new output format `--output /home/mkijowski/output/%j.%N.out`
+  - This will automatically create output files that look like this: `jobid.nodename.out` which prevents you from needing to change the outpout filename since this is generated based on the jobid and nodename it will be different each time you submit thisscript
+- `#SBATCH --nodes=2` requests two different compute nodes.
+- `#SBATCH --ntasks=2` requests two tasks.  Note that even though I only have one srun command I need two tasks if I plan on executing the srun on both of the `--nodes` I have requested.
+- `#SBATCH --gres=gpu:2` this line is totally new, but slurm supports scheduling of GPU resources through its Generic Resrouce (GRES) Scheduling
+  - The gres request above states that the resrouce you are requesting is a GPU and that you are requesting two of them.  Note: this is similar to the `--ntasks` option in that `--gres=gpu:2` will only request nodes that have two GPUs in them.
+- Finally we get to the task creation 
+```
+srun singularity exec --nv \
+             /home/mkijowski/cuda.img \
+             /home/mkijowski/samples-nvidia/1_Utilities/deviceQuery/deviceQuery
+```
+Some notes on the `\` character.  When the script is executed two things happen:
+  1. `\` are ignored
+  2. newlines after `\` are ignored
+  3. in the case above the `\` characters are used to make the script easier to read for humans...
+
