@@ -101,3 +101,74 @@ Some notes on the `\` character.  When the script is executed two things happen:
   2. newlines after `\` are ignored
   3. in the case above the `\` characters are used to make the script easier to read for humans...
 
+## More advanced Slurm submission scripts
+### Embarrassingly parallel workloads (using `--array`)
+Sometimes you just need to get a lot of things done without thinking about things like message passing (MPI).  Good examples of this include **random draws** (Monte-Carlo simulations where you plan to combine the output and post-process as another task), or if you are performing **parameter sweeps**, where the same code will be executed multiple times with an initial high-level parameter changed each time.
+
+```
+#!/bin/bash
+#
+#SBATCH --job-name=test_emb_arr
+#SBATCH --output=res_emb_arr.txt
+#
+#SBATCH --ntasks=1
+#SBATCH --time=10:00
+#SBATCH --mem-per-cpu=100
+#
+#SBATCH --array=1-8
+
+srun singularity exec mycontainer.simg ./my_program.exe $SLURM_ARRAY_TASK_ID
+```
+
+The above submission script will execute `my_program.exe` eight times, creating eight different jobs, and each execution will be passed a the variable **SLURM_ARRAY_TASK_ID** which will range from 1 to 8.
+
+If you need numerical arguments that are not a simple integer sequence you could also do the following:
+
+```
+ARGS=(0.05 0.25 0.5 1 2 5 100 1000)
+
+srun ./my_program.exe ${ARGS[$SLURM_ARRAY_TASK_ID]}
+```
+
+
+In the case where you want to process **several data files** as input you could use the following:
+
+```
+#!/bin/bash
+#
+#SBATCH --job-name=test_emb_arr
+#SBATCH --output=res_emb_arr.txt
+#
+#SBATCH --ntasks=1
+#SBATCH --time=10:00
+#SBATCH --mem-per-cpu=100
+#
+#SBATCH --array=1-8
+
+FILES=(/path/to/data/*)
+
+srun singularity exec ./my_container.simg ./my_program.exe ${FILES[$SLURM_ARRAY_TASK_ID]}
+```
+
+### Packed jobs
+Say you don't actually want to count and instead want to execute your program on files in a directory:
+
+```
+#! /bin/bash
+#
+#SBATCH --ntasks=8
+
+for file in /path/to/data/*
+do
+   srun -n1 --exclusive singularity exec ./my_container.simg ./myprog $file &
+done
+wait
+```
+
+The above submission script will execute `myprog` for every file in `/path/to/data/` but will do so 8 at a time, using one cpu per task.
+
+### Interactive jobs
+Finally, although normally you want to script/automate the batch execution of jobs, someitmes you just need a terminal to test some things.  Instead of directly SSH-ing into a system that might have another users job submitted, you can request a bash terminal on a node using the following:
+```
+srun --gres=gpu:1 --pty bash
+```
