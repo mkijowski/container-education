@@ -1,0 +1,46 @@
+# Slurm Quick Start
+This guide was [templated from here,](https://support.ceci-hpc.be/doc/_contents/QuickStart/SubmittingJobs/SlurmTutorial.html) which goes into more detail regarding many of these commands.
+Another greate resource is the [Slurm Quick Start User Guide](https://slurm.schedmd.com/quickstart.html) which has links to other good slurm documentation.
+
+Resource sharing on a High Performance Computer (HPC) system is typically organized by a pieve of software called a resource manager or job scheduler.  Users submit jobs which are scheduled and allocated resources (CPU cores, GPU, RAM, time, etc.) by the resource manager.
+
+[Slurm](https://slurm.schedmd.com/) is the scheduler that we are using here at Wright State.  In this document we will cover the basics of interacting with slurm in order to figure out what resources are available and to submit jobs for computation on a cluster.
+
+## Gathering information
+The first two slurm commands that are arguably the most important are `sinfo` and `squeue`.
+The `sinfo` command displays information about nodes and partitions available to you.  To find out more about the command run `man sinfo` on the atrc-data system to displa the manual.
+Two useful options for displaying information on atrc-data are `sinfo -lN` which prints out more information about the cluster (`-l` option) and displays information o na per node format (`-N` option).  The current output of the above when run on the local atrc-data cluster is as follows:
+
+```
+NODELIST   NODES PARTITION       STATE CPUS    S:C:T MEMORY TMP_DISK WEIGHT AVAIL_FE REASON              
+work01         1    debug*        idle   16    1:8:2 120000        0      1   (null) none                
+work02         1    debug*        idle   16    1:8:2 120000        0      1   (null) none                
+work03         1    debug*        idle   12    1:6:2  30000        0      1   (null) none                
+work04         1    debug*        idle    8    1:4:2  30000        0      1   (null) none                
+work05         1    debug*        idle   12    1:6:2  30000        0      1   (null) none                
+work06         1    debug*        idle   16    1:8:2 120000        0      1   (null) none                
+work07         1    debug*        idle    8    1:4:2  15000        0      1   (null) none 
+```
+
+And here is the output without the `-lN` options passed:
+
+```
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+debug*       up   infinite      7   idle work[01-07]
+```
+
+The `squeue` command shows the list of jobs that are either currently running (in the RUNNING state, noted as 'R') or jobs that are waiting for resources (in the PENDING state, noted as 'PD').
+
+Below you can see the output of a `squeue` command after I have submitted a slurm job that was a simple wait command:
+```
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+                61     debug    sleep mkijowsk  R       0:03      1 work04
+```
+
+If I wanted to cancel the above job I can reference it's JOBID using the `scancel` command like so `scancel 61`.  Another way I could cancel the job would be to use the `-u` option like so: `scancel -u mkijowski`.  This command would cancel ALL jobs that were submitted by user mkijowski.  Note: you can only cancel jobs that were submitted by your user.
+
+## Creating a job
+Jobs consists of two parts: **resource requests** and **job steps**.  A resource request consists of a number of CPU's, amount of memory, amount of time, etc.  Job steps describe what programs to run.
+
+It is usually easiest to submit a job by writing a sumbission script.  Typically these scripts are submitted with the `sbatch` command.  These job submission scripts have a common format that begins with a list of `#SBATCH` options that are interpretted by the slurm scheduler as resource requests and other options, followed by a list of job steps that are executed swith the `srun` command.
+
