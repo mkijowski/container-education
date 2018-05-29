@@ -1,43 +1,9 @@
-# Introduction to Containers & Singularity
+# Purpose
+The purpose of this repository is to gather information useful to someone who is new to the HPC systems available at Wright State. 
+In order to support a rapidly changing computational environment we have adopted the use of containers.  In this repository you 
+will find guides that introduce our chosen container solution [Singularity](https://singularity.lbl.gov/) and our chosen job 
+scheduler [Slurm Workload Manager](https://slurm.schedmd.com/).
 
-The purpose of this repository is to provide a hands-on environment that provides some introductory experience in using containers.
-
-By the end of this you will hopefully understand the following:
-* What a container is
-* When to use a container
-* Several methods for building singularity containers
-* Common Singularity flags
-
-Since I am presenting this repository it will be used mostly for a reference.  
-
-##Installing Singularity (and other pre-requisites)
-Please see the [Singularity Installation Guide](https://singularity.lbl.gov/docs-installation) for complete details on how to install Singularity.  Below is a brief walktrhough of a typical installtion.
-```
-sudo apt update
-sudo apt install python \
-    dh-autoreconf \
-    build-essential \
-    libarchive-dev \
-    git
-git clone https://github.com/singularityware/singularity.git
-cd singularity
-./autogen.sh
-./configure --prefix=/usr/local --sysconfdir=/etc
-make
-sudo make install
-
-```
-### installing on mac
-http://singularity.lbl.gov/install-mac
-## What is a container
-[Linux Containers or LXC](https://en.wikipedia.org/wiki/LXC) is an operating system level virtualization method for running multiple isolated Linux systems (containers) on a host using a Single Linux kernel.
-
-LXC uses a variety of kernel tools such as [chroot][chroot], [cgroups][cgroups], and [namespaces][namespaces] to provide isolation of containers.
-
-[But why though?](https://singularity.lbl.gov/about#use-cases)
-* BYOE: Bring Your Own Environment!
-* Reproducible Science
-* Static Environment
-* Legacy code on old operating systems
-* Complicated software stack
-* Complicated workflows that require custom install/data
+## How to use this guide
+To get the most of these materials you need to have a basic understanding of linux and knowledge of the computational problem 
+you are trying to solve. 
