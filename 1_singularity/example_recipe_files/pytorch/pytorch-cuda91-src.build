@@ -1,0 +1,61 @@
+bootstrap:docker
+From:nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
+
+%setup
+	echo "# singularity nvidia libs when run in --nv
+/.singularity.d/libs/" >> ${SINGULARITY_ROOTFS}/etc/ld.so.conf.d/singularity-nv.conf
+
+%environment
+	
+%post 
+	## Install dependencies and clean
+	apt update && apt install -y --no-install-recommneds \
+		build-essential \
+		cmake \
+		curl \
+		wget \
+		unzip \
+		vim \
+		git \
+		ca-certificates \
+		libjpeg-dev \
+		libpng-dev
+	rm -rf /var/lib/apt/lists/*
+		
+	## Install anaconda3 5.1
+	wget https://repo.anaconda.com/archive/Anaconda3-5.1.0-Linux-x86_64.sh -O ~/anaconda.sh
+	bash ~/anaconda.sh -b -p /opt/anaconda3
+	export PATH=/opt/anaconda3/bin:$PATH	
+	conda update -y -n base conda
+	conda install -y \
+		numpy \
+		pyyaml \
+		mkl \
+		mkl-include \
+		setuptools \
+		cmake \
+		cffi \
+		typing
+
+###############################
+# Installing pytorch
+###############################
+
+%apphelp torchinstall
+	The torch install app allows a post installation of torch to a writable container.
+	It requires the container first be made using --sandbox (so image size can grow).
+	Then the pytorch installation can be run with the following:
+	singularity run --writable --nv --app torchinstall /path/to/this/container/
+
+%appenv torchinstall
+	export CMAKE_PREFIX_PATH=/opt/anaconda3/
+        export TORCH_CUDA_ARCH_LIST="5.2+PTX 6.0 6.1"
+        export CUDA_HOME=/usr/local/cuda-9.1/
+
+        #export TORCH_CUDA_ARCH_LIST="3.0;3.5;5.0;5.2+PTX;6.0;6.1" (all arhitectures)
+
+	git clone --recursive https://github.com/pytorch/pytorch
+
+#conda install -y -c pytorch magma-cuda91
+#cd pytorch
+#python setup.py install

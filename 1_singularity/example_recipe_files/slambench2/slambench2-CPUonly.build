@@ -1,0 +1,69 @@
+bootstrap:docker
+from:ubuntu:16.04
+
+%post
+
+# Gets needed updates for OS and downloads software from github
+apt-get -y update && apt-get -y install \
+    libvtk6.2 \
+    libvtk6-dev \
+    unzip \
+    libflann-dev \
+    wget \
+    mercurial \
+    git \
+    gcc \
+    cmake \
+    python-numpy \
+    freeglut3 \
+    freeglut3-dev \
+    libglew1.5 \
+    libglew1.5-dev \
+    libglu1-mesa \
+    libglu1-mesa-dev \
+    libgl1-mesa-glx \
+    libgl1-mesa-dev \
+    libxmu-dev \
+    libxi-dev \
+    libboost-all-dev \
+    cvs \
+    libgoogle-glog-dev \
+    libatlas-base-dev \
+    gfortran \
+    gtk2.0 \
+    libgtk2.0-dev \
+    libyaml-cpp-dev \
+    libyaml-dev \
+    libproj-dev \
+    vim
+
+cd /opt/
+
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+
+git clone https://github.com/pamela-project/slambench2.git
+cd /opt/slambench2/
+
+# Makes dependancies
+make deps brisk
+make deps ceres
+make deps cvd
+make deps eigen3
+make deps flann
+make deps freeimage
+make deps g2o
+make deps gvars
+make deps opencv
+make deps opengv
+make deps opentuner
+make deps pangolin
+make deps suitesparse - 
+make deps toon
+make deps pcl
+
+# Makes SLAMbench libraries
+make slambench
+make -i kfusion efusion lsdslam monoslam okvis orbslam2 ptam
+make slambench APPS=all
+

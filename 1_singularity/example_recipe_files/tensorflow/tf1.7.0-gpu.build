@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: tensorflow/tensorflow:1.7.0-rc1-gpu-py3
+
+%post
+    apt-get update && apt-get -y install \
+	locales \
+	git \
+	wget \
+	python3-dev \
+	python3-pip \
+	r-base \
+	libcupti-dev
+    locale-gen en_US.UTF-8
+    apt-get clean
+
+    pip3 install --upgrade pip
+    pip3 install keras numpy scipy scikit-learn Theano
+    pip3 install http://download.pytorch.org/whl/cu90/torch-0.3.0.post4-cp35-cp35m-linux_x86_64.whl
+    pip3 install torchvision

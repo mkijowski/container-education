@@ -1,0 +1,8 @@
+bootstrap:docker
+From:ubuntu:14.04
+%post 
+
+apt update && apt install -y wget unzip libxext6 libxt6
+wget https://www.mathworks.com/supportfiles/downloads/R2015b/deployment_files/R2015b/installers/glnxa64/MCR_R2015b_glnxa64_installer.zip && unzip MCR_R2015b_glnxa64_installer.zip -d MCR && cd MCR && ./install -mode silent -agreeToLicense yes
+LD_LIBRARY_PATH=/usr/local/MATLAB/MATLAB_Runtime/v90/
+

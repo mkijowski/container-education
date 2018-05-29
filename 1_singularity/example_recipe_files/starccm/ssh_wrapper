@@ -1,0 +1,29 @@
+#!/bin/bash
+
+## General notes:
+## This wrapper script was developed for running StarCCM++ inside of a Singularity container.
+## It's purpose is to be passed to starccm+ via the -rsh option and allows starccm+ built in MPI
+## to be used for parallel jobs by making sure SSH communications to compute nodes first start 
+## the Singularity container located at $SINGULARITY_IMAGE.
+##
+## reference all arguments with  $@
+## refernce number of arguments with $#
+
+# number of arguments before we need to insert singularity commands 
+# This ended up NOT being used but is left in case this makes sense for other wrapper scripts
+#NUM_ARG_SSH=2
+
+# which singularity image are we loading
+# NOTE: this needs to be used in a sed command so all "/" and "." characters need to be escaped with "\"
+SINGULARITY_IMAGE=\/data\/singularity\/starccm\.img
+
+# pipe all arguments to this command into sed to insert the singularity exec command where necessary.
+# NOTE: this sed command was developed after echo-ing all arguments sent to the ssh-wrapper script
+##      which showed that there were only two arguments sent to ssh, and ip address and the -n option.
+##      This sed catches " -n " and replaces it with " -n singularity exec $SINGULARITY_IMAGE ".
+NEW_ARGUMENTS=$(echo $@ | sed 's/ -n / -n singularity exec $SINGULARITY_IMAGE /g' )
+
+# pass newly formatted arguments to ssh.
+ssh $NEW_ARGUMENTS
+
+exit

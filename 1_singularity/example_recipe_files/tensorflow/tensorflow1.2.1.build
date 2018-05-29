@@ -1,0 +1,17 @@
+bootstrap:docker
+From:tensorflow/tensorflow:1.2.1-py3
+
+%post
+apt update && apt -y install wget git vim && \
+    echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
+    wget --quiet https://repo.continuum.io/archive/Anaconda3-4.4.0-Linux-x86_64.sh -O ~/anaconda.sh && \
+    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
+    rm ~/anaconda.sh
+ln -s /opt/conda/bin/conda /usr/bin/conda
+conda create -n tensorflow
+
+# the following lines need to be run mannually to install tensorflow
+#cd /opt/conda/envs/tensorflow/bin/
+#source activate tensorflow
+#pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp36-cp36m-linux_x86_64.whl
+
