@@ -22,12 +22,12 @@ sudo make install
 
 ## Using Singularity
 The expected workflow for singularity is as follows:
-* Build your Singularity container (use `singularity build --sandbox` so that you can make changes to it)
+* Build your Singularity container (use `sudo singularity build --sandbox /my/container/directory/ buildfile` so that you can make changes to it)
 * Make changes to your Singularity container by launching a writable shell inside of it  
-`sudo singularity shell --writable my-container/`
-* Test your container using `singularity exec my-container/ command options`
-* Convert your container to a static image BEFORE transferring(sftp/scp) it with 
-`singularity build my-container.simg my-container/`
+`sudo singularity shell --writable /my/container/directory/`
+* Test your container using `singularity exec /my/container/directory/ command options`
+* Convert your sandbox container directory to a read-only container file (static image or .simg) BEFORE transferring(sftp/scp) it with 
+   `sudo singularity build my-container.simg /my/container/directory/`
 
 ### [Building singularity containers](https://singularity.lbl.gov/docs-build-container) with `singularity build`
 The `singularity build` command is used to create singularity containers.  With it you specfy the output container image and a target input to build the contianer from.
