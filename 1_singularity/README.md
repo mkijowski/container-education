@@ -37,9 +37,9 @@ singularity build output-image target-input
 ```
 
 The `output-image` can produce containers in three different formats:
-* compressed, read-only, squashfs files system suitable for production (default)
-* writable ext3 file system for interactive development (`--writable` option, **BAD**)
-* writable chroot directory called a sandbox for interactive development (`--sandbox` option **GOOD**)
+* **my-container.simg** compressed, read-only, squashfs files system suitable for production (default)
+* **/my/container/directory/** writable chroot directory called a sandbox for interactive development (`--sandbox` option **GOOD**)
+* **my-container.img** writable ext3 file system for interactive development (`--writable` option, **BAD**)
 
 The `target-input` is what specifies what will go into the container and can be one of the following:
 * URI beginning with `shub://` to build from Singularity Hub
