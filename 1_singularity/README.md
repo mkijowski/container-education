@@ -22,12 +22,12 @@ sudo make install
 
 ## Using Singularity
 The expected workflow for singularity is as follows:
-* Build your Singularity container (use `singularity build --sandbox` so that you can make changes to it)
+* Build your Singularity container (use `sudo singularity build --sandbox /my/container/directory/ buildfile` so that you can make changes to it)
 * Make changes to your Singularity container by launching a writable shell inside of it  
-`sudo singularity shell --writable my-container/`
-* Test your container using `singularity exec my-container/ command options`
-* Convert your container to a static image BEFORE transferring(sftp/scp) it with 
-`singularity build my-container.simg my-container/`
+`sudo singularity shell --writable /my/container/directory/`
+* Test your container using `singularity exec /my/container/directory/ command options`
+* Convert your sandbox container directory to a read-only container file (static image or .simg) BEFORE transferring(sftp/scp) it with 
+   `sudo singularity build my-container.simg /my/container/directory/`
 
 ### [Building singularity containers](https://singularity.lbl.gov/docs-build-container) with `singularity build`
 The `singularity build` command is used to create singularity containers.  With it you specfy the output container image and a target input to build the contianer from.
@@ -37,9 +37,9 @@ singularity build output-image target-input
 ```
 
 The `output-image` can produce containers in three different formats:
-* compressed, read-only, squashfs files system suitable for production (default)
-* writable ext3 file system for interactive development (`--writable` option, **BAD**)
-* writable chroot directory called a sandbox for interactive development (`--sandbox` option **GOOD**)
+* `my-container.simg` compressed, read-only, squashfs files system suitable for production (default)
+* ` --sandbox /my/container/directory/` writable chroot directory called a sandbox for interactive development (`--sandbox` option **GOOD**)
+* it is possible to make a writable ext3 file system for interactive development **BUT** because this file system gets created with a fixed size it is not useful when attempting to create containers unless you now exactly how big your final container image will be from the beginning.
 
 The `target-input` is what specifies what will go into the container and can be one of the following:
 * URI beginning with `shub://` to build from Singularity Hub
@@ -49,28 +49,26 @@ The `target-input` is what specifies what will go into the container and can be 
 * path to an archive in `.tar` or `.tar.gz`
 * path to a singularity recipe file
 
-Why is the `--writable` flag bad and the `--sandbox` flag good?  Because `--writable` creates a fixed
-size disk image file that is very difficult to grow.  Because `--sandbox` containers exist as folders 
-they have no pre-configured upper size limit (besides your file system size).
 
 Example `singularity build` commands:
 ```
 sudo singularity build MatlabCompiledRuntime18.simg MCR18a.build
 ## Builds from a recipe file named `MCR18a.build` that must be available locally.
 
-sudo singularity build --sandbox cuda91/ docker://nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
+sudo singularity build --sandbox /home/mkijowski/cuda91/ docker://nvidia/cuda:9.1-cudnn7-devel-ubuntu16.04
 ## Builds a sandbox container directly from a dockerhub container
 
-sudo singularity build cuda91.simg cuda91/
-## Converts a sandbox container to a static .simg containter
+sudo singularity build cuda91.simg /home/mkijowski/cuda91/
+## Converts a previoulsy created sandbox container to a static .simg containter
 ```
 
 ### Using / editing containers with `singularity shell` 
-The `singularity shell my-container/` launches a shell inside the container.
-* `singularity shell container.simg` launches a shell inside the container
-* `singularity exec container.simg command` executes the command specified inside of the container (will be used in job scheduling scripts)
+The `sudo singularity shell --writable /my/container/directory/` launches a shell inside the container from which we can continue our software installation and testing.  Note: the `--writable` flag requires sudo priveleges, without `--writable` the container would be read only (even though it is a `--sandbox` container.
 
-### it gets bad after this...
+Once you are finished installing and testing your software, do not forget to convert your `--sandbox` container back to a `.simg` with 
+`sudo singularity build my-container.simg /my/container/directory/`
+
+### Advacned Singularity topics
 ### [Singularity recipes](http://singularity.lbl.gov/docs-recipes)
 A singularity recipe is a text file that defines a custom container build.  Instead of going into all of the ins nad outs of singularity recipes, refer to the document above and experimetn on our own.  In this directory are several exmaples of singularity recipes.  
 
