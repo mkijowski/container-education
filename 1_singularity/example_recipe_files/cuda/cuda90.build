@@ -1,0 +1,45 @@
+bootstrap:docker
+From:nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
+
+%setup
+	echo "# singularity nvidia libs when run in --nv
+/.singularity.d/libs/" >> ${SINGULARITY_ROOTFS}/etc/ld.so.conf.d/singularity-nv.conf
+
+%environment
+	PATH=/opt/anaconda3/bin/:$PATH
+	CUDA_HOME=/usr/local/cuda-9.0/
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}/usr/local/cuda/extras/CUPTI/lib64
+
+%post 
+	apt update
+	apt install -y \
+		wget \
+		unzip \
+		vim \
+		git \
+		cmake \
+		cuda-command-line-tools
+
+	rm /etc/ld.so.cache
+	ldconfig
+
+	wget https://repo.anaconda.com/archive/Anaconda3-5.1.0-Linux-x86_64.sh -O ~/anaconda.sh
+	bash ~/anaconda.sh -b -p /opt/anaconda3
+	
+	export CMAKE_PREFIX_PATH=/opt/anaconda3
+	export CUDA_HOME=/usr/local/cuda-9.1/ 
+	export PATH=/opt/anaconda3/bin/:$PATH
+
+	conda update -y -n base conda
+	conda install -y \
+		numpy \
+		pyyaml \
+		mkl \
+		mkl-include \
+		setuptools \
+		cmake \
+		cffi \
+		typing
+
+	wget https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.9.0-cp35-cp35m-linux_x86_64.whl
+

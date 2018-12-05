@@ -1,8 +1,12 @@
 # Singularity Quick-Start guide
 This quide will get you working with singularity quickly.
 
-##Installing Singularity (and other pre-requisites)
-Please see the [Singularity Installation Guide](https://singularity.lbl.gov/docs-installation) for complete details on how to install Singularity.  Below is a brief walktrhough of a typical installtion.
+## Installing Singularity (and other pre-requisites)
+
+### Installing Singularity 2.6 (Recommended)
+
+Please see the [Singularity 2.6 User Guide](https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#quick-installation-steps) for complete details on how to install Singularity.  Below is a brief walktrhough of a typical installtion.
+
 ```
 sudo apt update
 sudo apt install python \
@@ -12,10 +16,57 @@ sudo apt install python \
     git
 git clone https://github.com/singularityware/singularity.git
 cd singularity
+git fetch --all
+git checkout 2.6.0
 ./autogen.sh
-./configure --prefix=/usr/local --sysconfdir=/etc
+./configure --prefix=/usr/local
 make
 sudo make install
+```
+
+### Installing Singularity 3.0 (Not Recommended yet)
+Please see the [Singularity 3.0 User Guide](https://www.sylabs.io/guides/3.0/user-guide/quick_start.html#quick-installation-steps) for complete details on how to install Singularity.  Below is a brief walktrhough of a typical installtion.
+
+* First install some system dependencies:
+
+```
+sudo apt-get update && sudo apt-get install -y \
+    build-essential \
+    libssl-dev \
+    uuid-dev \
+    libgpgme11-dev \
+    squashfs-tools
+```
+
+* Next install Go.  Choose a version of Go >=1.11.1 from the [Go download page](https://golang.org/dl/) and copy the link to use with `wget` like so:
+
+```
+export VERSION=1.11 OS=linux ARCH=amd64
+cd /tmp
+wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz
+sudo tar -C /usr/local -xzf go$VERSION.$OS-$ARCH.tar.gz
+echo 'export GOPATH=${HOME}/go' >> ~/.bashrc
+echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc
+source ~/.bashrc
+```
+
+* Clone Singularity repo and setup (the finicky) Go directory structure and dependencies:
+
+```
+mkdir -p $GOPATH/src/github.com/sylabs
+cd $GOPATH/src/github.com/sylabs
+git clone https://github.com/sylabs/singularity.git
+cd singularity
+go get -u -v github.com/golang/dep/cmd/dep
+```
+
+* Compile Singularity
+
+```
+cd $GOPATH/src/github.com/sylabs/singularity
+./mconfig
+make -C builddir
+sudo make -C builddir install
 ```
 
 [Mac installation instructions can be found here.](http://singularity.lbl.gov/install-mac)
