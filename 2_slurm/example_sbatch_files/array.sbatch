@@ -1,12 +1,10 @@
 #!/bin/bash
 #
 #SBATCH --job-name=test_emb_arr
-#SBATCH --output=res_emb_arr.txt
-#
+#SBATCH --output=/home/%u/%x-%u-%j.out
 #SBATCH --ntasks=1
 #SBATCH --time=10:00
 #SBATCH --mem-per-cpu=100
-#
 #SBATCH --array=1-8
 
 srun singularity exec mycontainer.simg ./my_program.exe $SLURM_ARRAY_TASK_ID

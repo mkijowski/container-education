@@ -2,7 +2,7 @@
 
 #SBATCH -N 1
 #SBATCH --job-name=myjob
-#SBATCH -o /home/mkijowski/output/%j.%N.out
+#SBATCH --output=/home/%u/%x-%u-%j.out
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=matthewkijowski@gmail.com
 

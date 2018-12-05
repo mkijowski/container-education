@@ -1,14 +1,13 @@
 #!/bin/bash
 #
 #SBATCH --job-name=test_cuda
-#SBATCH --output /home/mkijowski/output/%j.%N.out
-#
-#SBATCH --nodes=2
+#SBATCH --output=/home/%u/%x-%u-%j.out
+#SBATCH --nodes=1
 #SBATCH --ntasks=2
 #SBATCH --time=5:00
 #SBATCH --mem-per-cpu=1000
 
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 
 srun singularity exec --nv \
     /home/mkijowski/cuda.img \

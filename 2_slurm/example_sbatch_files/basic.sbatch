@@ -1,8 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=test
-#SBATCH --output=res.txt
-#
+#SBATCH --output=/home/%u/%x-%u-%j.out
 #SBATCH --ntasks=1
 #SBATCH --time=10:00
 #SBATCH --mem-per-cpu=100
