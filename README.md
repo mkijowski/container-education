@@ -1,7 +1,7 @@
 # Purpose
 The purpose of this repository is to gather information useful to someone who is new to HPC systems running a container technology.  In order to support a rapidly changing computational environment we have adopted the use of singularity
 containers.  In this repository you will find guides that introduce our chosen container solution 
-[Singularity](https://singularity.lbl.gov/) 
+[Singularity](https://sylabs.io/) 
 and our chosen job scheduler [Slurm Workload Manager](https://slurm.schedmd.com/).  By using both of these tools
 we allow students and researchers to develop a container environment locally (on their laptop or PC) and enable them to move 
 the container and job script around to different compute resources without needing to re-install software or 
@@ -12,10 +12,9 @@ To get the most of these materials you need to have a basic understanding of lin
 computational problem you are trying to solve.  To better outline how to use this guide I will first layout the
 expected workflow a user should use:
 1. Install Singularity on your local system
-   * [linux  install instructions](https://singularity.lbl.gov/install-linux)
-   * [mac install instructions](https://singularity.lbl.gov/install-mac)
-   * windows users should install virtual box and a linux VM, then follow the above linux instructions
-2. Build your Singularity container (use `sudo singularity build --sandbox /my/container/directory/ buildfile` so that you can make changes to it)
+   * [linux  install instructions](https://sylabs.io/guides/3.2/user-guide/quick_start.html#quick-installation-steps)
+   * Windows and Mac users will need Vagrant or other virtualized linux.  [Windows and Mac install instructions](https://sylabs.io/guides/3.2/user-guide/installation.html#install-on-windows-or-mac)
+2. Build your Singularity container (use `sudo singularity build --sandbox /my/container/directory/  definition-file` so that you can make changes to it)
    * Make changes to your Singularity container by launching a writable shell inside of it 
    `sudo singularity shell --writable /my/container/directory/`
    * Test your container using `singularity exec /my/container/directory/ command options`

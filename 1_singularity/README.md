@@ -2,7 +2,6 @@
 This quide will get you working with singularity quickly.
 
 ## Installing Singularity (and other pre-requisites)
-
 ### Installing Singularity 2.6 (Recommended)
 
 Please see the [Singularity 2.6 User Guide](https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#quick-installation-steps) for complete details on how to install Singularity.  Below is a brief walktrhough of a typical installtion.
