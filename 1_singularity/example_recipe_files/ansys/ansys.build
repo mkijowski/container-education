@@ -1,0 +1,17 @@
+bootstrap:docker
+From:centos
+
+%setup
+
+%environment
+
+%post 
+
+    ## make directory for bind mount of ansys install files
+    #mkdir /ansys
+
+    yum update
+    yum install -y which \
+	freetype \
+	libXext 
+

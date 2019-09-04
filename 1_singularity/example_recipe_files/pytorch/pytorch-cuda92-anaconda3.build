@@ -21,8 +21,8 @@ From:nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
 	rm /etc/ld.so.cache
 	ldconfig
 
-	wget https://repo.anaconda.com/archive/Anaconda3-5.1.0-Linux-x86_64.sh -O ~/anaconda.sh
-	bash ~/anaconda.sh -b -p /opt/anaconda3
+	wget https://repo.anaconda.com/archive/Anaconda3-5.1.0-Linux-x86_64.sh -O /tmp/anaconda.sh
+	bash /tmp/anaconda.sh -b -p /opt/anaconda3
 
 	export CMAKE_PREFIX_PATH=/opt/anaconda3
 	export CUDA_HOME=/usr/local/cuda-9.2/ 
