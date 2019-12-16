@@ -12,8 +12,8 @@ To get the most of these materials you need to have a basic understanding of lin
 computational problem you are trying to solve.  To better outline how to use this guide I will first layout the
 expected workflow a user should use:
 1. Install Singularity on your local system
-   * [linux  install instructions](https://sylabs.io/guides/3.2/user-guide/quick_start.html#quick-installation-steps)
-   * Windows and Mac users will need Vagrant or other virtualized linux.  [Windows and Mac install instructions](https://sylabs.io/guides/3.2/user-guide/installation.html#install-on-windows-or-mac)
+   * [linux  install instructions](https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps)
+   * Windows and Mac users will need Vagrant or other virtualized linux.  [Windows and Mac install instructions](https://sylabs.io/guides/3.5/user-guide/installation.html#install-on-windows-or-mac)
 2. Build your Singularity container (use `sudo singularity build --sandbox /my/container/directory/  definition-file` so that you can make changes to it)
    * Make changes to your Singularity container by launching a writable shell inside of it 
    `sudo singularity shell --writable /my/container/directory/`
