@@ -13,7 +13,7 @@ computational problem you are trying to solve.  To better outline how to use thi
 expected workflow a user should use:
 1. Install Singularity on your local system
    * [linux  install instructions](https://sylabs.io/guides/3.5/user-guide/quick_start.html#quick-installation-steps)
-   * Windows and Mac users will need Vagrant or other virtualized linux.  [Windows and Mac install instructions](https://sylabs.io/guides/3.5/user-guide/installation.html#install-on-windows-or-mac)
+   * Windows and Mac users will need Vagrant or other virtualized linux.  [Windows and Mac install instructions](https://sylabs.io/guides/3.5/admin-guide/installation.html#installation-on-windows-or-mac)
 2. Build your Singularity container (use `sudo singularity build --sandbox /my/container/directory/  definition-file` so that you can make changes to it)
    * Make changes to your Singularity container by launching a writable shell inside of it 
    `sudo singularity shell --writable /my/container/directory/`
