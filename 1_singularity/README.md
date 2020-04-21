@@ -37,6 +37,28 @@ sudo singularity build ubuntu.sif /home/mkijowski/ubuntu-container/
 ## Converts a previoulsy created sandbox container to a static .sif containter
 ```
 
+#### Building a singulularity container if you don't have || can't run singularity locally
+
+If you don't have singularity on your local system but have access to a server with singularity installed (like `bender` or `fry`), you are able to build containers on the server. However, unless you're one of the lucky people with sudo privileges, you won't be able to build containers with the commands given above. Instead, you'll have to use a remote builder. This is essentially yet another remote server that will accept singularity recipe files and return built images.
+
+The default remote builder for singularity is [cloud.sylabs.io/builder](https://cloud.sylabs.io/builder). In order to be able to use this remote builder with singularity, you will have to generate an API key at [cloud.sylabs.io/auth/tokens](https://cloud.sylabs.io/auth/tokens). Once you have generated an api key, save it to a local file for future reference and run the command `singularity remote login`. This will prompt you to enter the API token you just generated. If the login process works, singularity will print a message to the tune of "INFO:    API Key Verified!" At this point you are able to build singularity containers remotely by adding the `-r` or `--remote` flag to the build command.
+
+Re-working the examples above for remote building:
+
+```
+singularity remote login
+## Logs in to the remote builder
+
+singularity build -r --sandbox /home/mkijowski/ubuntu-container/ docker://ubuntu
+## Remotely builds a sandbox container directly from a dockerhub container
+
+singularity build -r ubuntu.sif docker://ubuntu
+## Remotely builds a static .sif containter
+## NOTE: this is actually slightly different than the example above.
+##  I wasn't able to find a way to easily convert the sandbox image to a .sif image,
+##  so I just gave code for building a .sif container remotely :(
+```
+
 ### Using and editing containers with `singularity shell` 
 The `sudo singularity shell --writable /my/container/directory/` launches a shell inside the container from which we can continue our software installation and testing.  Note: the `--writable` flag requires sudo priveleges, without `--writable` the container would be read only (even though it is a `--sandbox` container.
 
