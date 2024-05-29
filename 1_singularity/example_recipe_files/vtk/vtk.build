@@ -1,0 +1,37 @@
+bootstrap:docker
+From:ubuntu:18.04
+
+
+%environment
+	PATH=/opt/anaconda2/bin/:$PATH
+	PROMPT_COMMAND=
+%post
+	apt update 
+	apt install -y \
+	    wget \
+	    unzip \
+	    git \
+	    cmake \
+	    make \
+	    build-essential \
+	    libglu1-mesa-dev \
+	    freeglut3-dev \
+	    mesa-common-dev
+
+	if [ -f ~/anaconda.sh ]
+	then
+	    rm ~/anaconda.sh
+	fi
+
+	wget https://repo.anaconda.com/archive/Anaconda2-2018.12-Linux-x86_64.sh -O /opt/anaconda.sh
+
+	bash /opt/anaconda.sh -b -p /opt/anaconda2
+	rm /opt/anaconda.sh
+	export CMAKE_PREFIX_PATH=/opt/anaconda2
+	export PATH=/opt/anaconda2/bin/:$PATH
+
+	conda update -y -n base conda
+	conda install -y cmake pip
+	conda install -y -c anaconda vtk
+
+
