@@ -19,7 +19,7 @@ singularity build <output-image> <target-input>
 
 The `output-image` can produce containers in two different formats:
 * `my-container.sif` compressed, *read-only*, squashfs files system suitable for production (default)
-* ` --sandbox </my/container/directory/>` *writable* chroot directory called a sandbox for interactive development (`--sandbox` option **GOOD** for testing and development)
+* `--sandbox </my/container/directory/>` *writable* chroot directory called a sandbox for interactive development (`--sandbox` option **GOOD** for testing and development)
 
 The `target-input` is what specifies what will go into the container and can be one of the following:
 
@@ -74,7 +74,7 @@ Once you are finished installing and testing your software, do not forget to con
 
 ---
 
-## Advacned Singularity topics
+## Advanced Singularity topics
 
 ### [Singularity recipes](http://singularity.lbl.gov/docs-recipes)
 A singularity recipe is a text file that defines a custom container build.  Instead of going into all of the ins nad outs of singularity recipes, refer to the document above and experimetn on our own.  In this directory are several exmaples of singularity recipes.  
