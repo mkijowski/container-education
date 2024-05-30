@@ -1,0 +1,57 @@
+bootstrap:docker
+From:nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+
+%setup
+	# Not sure how much of a requirement this section info is
+	# was needed back in cuda 9 / 10 days...
+	echo "# singularity nvidia libs when run in --nv
+#/.singularity.d/libs/" >> ${SINGULARITY_ROOTFS}/etc/ld.so.conf.d/singularity-nv.conf
+
+%environment
+	# PATH is for optional anaconda / miniconda install
+	PATH=/opt/anaconda3/bin/:$PATH
+
+	# Some programs want an environment variable pointing to installed cuda libraries
+	CUDA_HOME=/usr/local/cuda-12.4/
+
+%post 
+	apt update
+	apt install -y \
+		wget \
+		unzip \
+		vim \
+		git \
+		cmake
+
+	rm /etc/ld.so.cache
+	ldconfig
+
+	## Everything below this installs the latest miniconda.  Feel free to delete below this line
+	## for a working Cuda container
+
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/anaconda.sh 
+	bash /tmp/anaconda.sh -b -p /opt/anaconda3
+	rm /tmp/anaconda.sh
+
+	export CMAKE_PREFIX_PATH=/opt/anaconda3
+	export CUDA_HOME=/usr/local/cuda-12.4/ 
+	export PATH=/opt/anaconda3/bin/:$PATH
+
+	conda update -y -n base conda
+	conda install -y \
+		numpy \
+		pyyaml \
+		mkl \
+		mkl-include \
+		setuptools \
+		cmake \
+		cffi \
+		typing \
+		pip \
+		scipy \
+		pandas \
+		matplotlib
+
+    pip install --upgrade pip
+    pip install ggplot seaborn plotly jupyterlab
+
