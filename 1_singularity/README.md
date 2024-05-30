@@ -1,9 +1,14 @@
 # Singularity Quick-Start guide
 This quide will get you working with singularity quickly.
 
+* [Installing Singularity](#installing-singularity)
+* [Building Singularity Containers](#building-singularity-containers-with-singularity-build)
+* [Example Singularity build Workflow]()
+* [Using the GPU with --nv]()
+
 ---
 
-### Installing Singularity <latest>
+### Installing Singularity
 
 Please see the [Singularity User Guide - Quick installation steps](https://docs.sylabs.io/guides/latest/user-guide/quick_start.html#quick-installation-steps) for complete details on how to install Singularity.  Below is a brief walktrhough of 3 typical installtions.
 
@@ -42,44 +47,49 @@ sudo singularity build ubuntu.sif /home/mkijowski/ubuntu-container/
 
 ---
 
-### Building a singulularity container if you don't have || can't run singularity locally
+### Example Singularity build workflow
 
-If you don't have singularity on your local system but have access to a server with singularity installed (like `bender` or `fry`), you are able to build containers on the server. However, unless you're one of the lucky people with sudo privileges, you won't be able to build containers with the commands given above. Instead, you'll have to use a remote builder. This is essentially yet another remote server that will accept singularity recipe files and return built images.
+This section will describe my personal workflow for building a specific singularity container.  
+To do this you need some information about what software you need / how to install it.
 
-The default remote builder for singularity is [cloud.sylabs.io/builder](https://cloud.sylabs.io/builder). In order to be able to use this remote builder with singularity, you will have to generate an API key at [cloud.sylabs.io/auth/tokens](https://cloud.sylabs.io/auth/tokens). Once you have generated an api key, save it to a local file for future reference and run the command `singularity remote login`. This will prompt you to enter the API token you just generated. If the login process works, singularity will print a message to the tune of "INFO:    API Key Verified!" At this point you are able to build singularity containers remotely by adding the `-r` or `--remote` flag to the build command.
-
-Re-working the examples above for remote building:
-
+1. Determine a base OS (Ubuntu, rocky linux, etc).
+2. Determine whether you need GPU access (determines whether you should start with a Cuda container from nvidia)
+3. Start with a very simple build file using a docker image:
 ```bash
-singularity remote login
-## Logs in to the remote builder
+## my-example-recipe.build
+bootstrap:docker
+From:ubuntu/latest
 
-singularity build -r --sandbox /home/mkijowski/ubuntu-container/ docker://ubuntu
-## Remotely builds a sandbox container directly from a dockerhub container
-
-singularity build -r ubuntu.sif docker://ubuntu
-## Remotely builds a static .sif containter
-## NOTE: this is actually slightly different than the example above.
-##  I wasn't able to find a way to easily convert the sandbox image to a .sif image,
-##  so I just gave code for building a .sif container remotely :(
+%setup
+	# nothing yet
+%environment
+	# nothing yet
+%post 
+	# nothing yet
 ```
-
----
-
-### Using and editing containers with `singularity shell` 
-The `sudo singularity shell --writable /my/container/directory/` launches a shell inside the container from which we can continue our software installation and testing.  Note: the `--writable` flag requires sudo priveleges, without `--writable` the container would be read only (even though it is a `--sandbox` container.
-
-Once you are finished installing and testing your software, do not forget to convert your `--sandbox` container back to a `.simg` with 
-`sudo singularity build my-container.simg /my/container/directory/`
+4. Build your container from the above as a `--sandbox`
+```bash
+sudo singularity build --sandbox ./my-sandbox/ ./my-axample-recipe.build
+```
+5. Enter your container and make changes using the following:
+```bash
+sudo singularity shell --writable ./my-sandbox/
+```
+  * I highly recommend documenting your changes back in the build file under the `%post` section.
+    These need to be automated with no user input (silent installs) but dont worry about that for starters, just keep a
+    record of what you are changing.
+6. Test your container (preferably *without* using `--writable`)
+7. Finalize your tested container by converting it to a `.sif` read-only file:
+```bash
+sudo singularity build my-container.sif ./my-sandbox/
+```
 
 ---
 
 ## Advanced Singularity topics
 
-### [Singularity recipes](http://singularity.lbl.gov/docs-recipes)
-A singularity recipe is a text file that defines a custom container build.  Instead of going into all of the ins nad outs of singularity recipes, refer to the document above and experimetn on our own.  In this directory are several exmaples of singularity recipes.  
+### Binding directories with `-B`
 
-### Binding with `-B`
 By default the only directory shared between the host and container is /home/$USER.  This means other user's home directories are not accessible from within the container (nor are other useful directories like /scratch).
 To remedy this you can specufy bind paths with the `--bind` or `-B` option.  
 The format for bind baths is as follows:
@@ -91,6 +101,7 @@ singularity shell -B <src:dest> <container.sif>
 Where `src` is a path on the host and `dest` is a path within the container.  If no `dest` path is provided it will use the same path as `src` inside the container.
 
 ### Nvidia GPU support (CUDA)
+
 Singularity containers support direct access to a local GPU only when given the `--nv` flag.
 ```
 singularity shell --nv cuda.simg
