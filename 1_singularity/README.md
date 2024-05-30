@@ -3,8 +3,9 @@ This quide will get you working with singularity quickly.
 
 * [Installing Singularity](#installing-singularity)
 * [Building Singularity Containers](#building-singularity-containers-with-singularity-build)
-* [Example Singularity build Workflow]()
-* [Using the GPU with --nv]()
+* [Example Singularity build Workflow](#example-singularity-build-workflow)
+* [Binding host directories into container](#binding-directories-with--b)
+* [Using the GPU with --nv](#nvidia-gpu-support-cuda)
 
 ---
 
