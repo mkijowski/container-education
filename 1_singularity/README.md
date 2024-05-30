@@ -55,7 +55,7 @@ To do this you need some information about what software you need / how to insta
 
 1. Determine a base OS (Ubuntu, rocky linux, etc).
 2. Determine whether you need GPU access (determines whether you should start with a Cuda container from nvidia)
-3. Start with a very simple build file using a docker image:
+3. Start with a very simple build file using a docker image.  Check the `docker pull <owner/repo>` command and put it in the `From:` field in the recipe `.build` file.  The example below is using ubuntu latest via [Ubuntu dockerhub tags](https://hub.docker.com/_/ubuntu/tags)
 ```bash
 ## my-example-recipe.build
 bootstrap:docker
