@@ -1,0 +1,56 @@
+bootstrap:docker
+From:nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+
+%setup
+	#echo "# singularity nvidia libs when run in --nv
+#/.singularity.d/libs/" >> ${SINGULARITY_ROOTFS}/etc/ld.so.conf.d/singularity-nv.conf
+
+%environment
+	PATH=/opt/anaconda3/bin/:$PATH
+	CUDA_HOME=/usr/local/cuda-12.4/
+
+%post 
+	apt update
+	apt install -y \
+		wget \
+		unzip \
+		vim \
+		git \
+		cmake
+
+	rm /etc/ld.so.cache
+	ldconfig
+
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/anaconda.sh 
+	bash /tmp/anaconda.sh -b -p /opt/anaconda3
+	rm /tmp/anaconda.sh
+
+	export CMAKE_PREFIX_PATH=/opt/anaconda3
+	export CUDA_HOME=/usr/local/cuda-12.4/ 
+	export PATH=/opt/anaconda3/bin/:$PATH
+
+	conda update -y -n base conda
+	conda install -y \
+		numpy \
+		pyyaml \
+		mkl \
+		mkl-include \
+		setuptools \
+		cmake \
+		cffi \
+		typing \
+		pip \
+		keras \
+		scipy \
+		scikit-learn \
+		tqdm \
+		pandas \
+		gensim \
+		nltk \
+		matplotlib \
+		tqdm 
+
+    pip install --upgrade pip
+    pip install ggplot seaborn plotly
+
+    conda install -y pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
