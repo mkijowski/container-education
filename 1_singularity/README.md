@@ -59,7 +59,7 @@ To do this you need some information about what software you need / how to insta
 ```bash
 ## my-example-recipe.build
 bootstrap:docker
-From:ubuntu/latest
+From:ubuntu
 
 %setup
 	# nothing yet
